@@ -390,7 +390,14 @@ class Upgrader {
   /// Only called by [UpgradeAlert].
   void checkVersion({
     required BuildContext context,
-    Widget Function(BuildContext context)? customDialog,
+    required Widget Function({
+      required BuildContext context,
+      String? message,
+      String? releaseNotes,
+      Function(BuildContext context, bool shouldPop) onUserUpdate,
+      Function(BuildContext context, bool shouldPop) onUserLater,
+    })?
+        customDialogBuilder,
   }) {
     if (!_displayed) {
       final shouldDisplay = shouldDisplayUpgrade();
@@ -403,7 +410,7 @@ class Upgrader {
         Future.delayed(const Duration(milliseconds: 0), () {
           _showDialog(
               context: context,
-              customDialog: customDialog,
+              customDialogBuilder: customDialogBuilder,
               title: messages.message(UpgraderMessage.title),
               message: message(),
               releaseNotes: shouldDisplayReleaseNotes() ? _releaseNotes : null,
@@ -561,7 +568,14 @@ class Upgrader {
 
   void _showDialog(
       {required BuildContext context,
-      required Widget Function(BuildContext context)? customDialog,
+      required Widget Function({
+        required BuildContext context,
+        String? message,
+        String? releaseNotes,
+        Function(BuildContext context, bool shouldPop) onUserUpdate,
+        Function(BuildContext context, bool shouldPop) onUserLater,
+      })?
+          customDialogBuilder,
       required String? title,
       required String message,
       required String? releaseNotes,
@@ -581,8 +595,13 @@ class Upgrader {
       builder: (BuildContext context) {
         return WillPopScope(
           onWillPop: () async => _shouldPopScope(),
-          child: customDialog != null
-              ? customDialog(context)
+          child: customDialogBuilder != null
+              ? customDialogBuilder(
+                  context: context,
+                  releaseNotes: releaseNotes,
+                  message: message,
+                  onUserUpdate: onUserUpdated,
+                  onUserLater: onUserLater)
               : (dialogStyle == UpgradeDialogStyle.material
                   ? _alertDialog(title!, message, releaseNotes, context)
                   : _cupertinoAlertDialog(

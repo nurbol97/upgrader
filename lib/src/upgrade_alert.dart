@@ -9,7 +9,13 @@ import 'package:upgrader/upgrader.dart';
 class UpgradeAlert extends UpgradeBase {
   /// The [child] contained by the widget.
   final Widget? child;
-  final Widget Function(BuildContext context)? alertBuilder;
+  final Widget Function({
+    required BuildContext context,
+    String? message,
+    String? releaseNotes,
+    Function(BuildContext context, bool shouldPop) onUserUpdate,
+    Function(BuildContext context, bool shouldPop) onUserLater,
+  })? alertBuilder;
 
   /// Creates a new [UpgradeAlert].
   UpgradeAlert({Key? key, Upgrader? upgrader, this.child, this.alertBuilder})
@@ -28,7 +34,8 @@ class UpgradeAlert extends UpgradeBase {
           if (processed.connectionState == ConnectionState.done &&
               processed.data != null &&
               processed.data!) {
-            upgrader.checkVersion(context: context, customDialog: alertBuilder);
+            upgrader.checkVersion(
+                context: context, customDialogBuilder: alertBuilder);
           }
           return child ?? Container();
         });
