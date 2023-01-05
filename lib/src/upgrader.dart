@@ -388,7 +388,10 @@ class Upgrader {
   }
 
   /// Only called by [UpgradeAlert].
-  void checkVersion({required BuildContext context}) {
+  void checkVersion({
+    required BuildContext context,
+    Widget Function(BuildContext context)? customDialog,
+  }) {
     if (!_displayed) {
       final shouldDisplay = shouldDisplayUpgrade();
       if (debugLogging) {
@@ -400,6 +403,7 @@ class Upgrader {
         Future.delayed(const Duration(milliseconds: 0), () {
           _showDialog(
               context: context,
+              customDialog: customDialog,
               title: messages.message(UpgraderMessage.title),
               message: message(),
               releaseNotes: shouldDisplayReleaseNotes() ? _releaseNotes : null,
@@ -557,6 +561,7 @@ class Upgrader {
 
   void _showDialog(
       {required BuildContext context,
+      required Widget Function(BuildContext context)? customDialog,
       required String? title,
       required String message,
       required String? releaseNotes,
@@ -576,9 +581,12 @@ class Upgrader {
       builder: (BuildContext context) {
         return WillPopScope(
           onWillPop: () async => _shouldPopScope(),
-          child: dialogStyle == UpgradeDialogStyle.material
-              ? _alertDialog(title!, message, releaseNotes, context)
-              : _cupertinoAlertDialog(title!, message, releaseNotes, context),
+          child: customDialog != null
+              ? customDialog(context)
+              : (dialogStyle == UpgradeDialogStyle.material
+                  ? _alertDialog(title!, message, releaseNotes, context)
+                  : _cupertinoAlertDialog(
+                      title!, message, releaseNotes, context)),
         );
       },
     );
