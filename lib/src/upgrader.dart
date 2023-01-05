@@ -390,13 +390,13 @@ class Upgrader {
   /// Only called by [UpgradeAlert].
   void checkVersion({
     required BuildContext context,
-    required Widget Function({
-      required BuildContext context,
+    required Widget Function(
+      BuildContext context,
       String? message,
       String? releaseNotes,
       Function(BuildContext context, bool shouldPop) onUserUpdate,
       Function(BuildContext context, bool shouldPop) onUserLater,
-    })?
+    )?
         customDialogBuilder,
   }) {
     if (!_displayed) {
@@ -568,13 +568,13 @@ class Upgrader {
 
   void _showDialog(
       {required BuildContext context,
-      required Widget Function({
-        required BuildContext context,
+      required Widget Function(
+        BuildContext context,
         String? message,
         String? releaseNotes,
         Function(BuildContext context, bool shouldPop) onUserUpdate,
         Function(BuildContext context, bool shouldPop) onUserLater,
-      })?
+      )?
           customDialogBuilder,
       required String? title,
       required String message,
@@ -597,11 +597,7 @@ class Upgrader {
           onWillPop: () async => _shouldPopScope(),
           child: customDialogBuilder != null
               ? customDialogBuilder(
-                  context: context,
-                  releaseNotes: releaseNotes,
-                  message: message,
-                  onUserUpdate: onUserUpdated,
-                  onUserLater: onUserLater)
+                  context, releaseNotes, message, onUserUpdated, onUserLater)
               : (dialogStyle == UpgradeDialogStyle.material
                   ? _alertDialog(title!, message, releaseNotes, context)
                   : _cupertinoAlertDialog(
