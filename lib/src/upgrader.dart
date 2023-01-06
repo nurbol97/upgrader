@@ -85,6 +85,9 @@ class Upgrader {
   /// The upgrade dialog style. Used only on UpgradeAlert. (default: material)
   UpgradeDialogStyle dialogStyle;
 
+  /// The completer which is used to wait when one of the actions of upgrade is completed (onUpgrade, onLater, onCancel)
+  Completer? completer;
+
   /// Duration until alerting user again
   final Duration durationUntilAlertAgain;
 
@@ -172,6 +175,7 @@ class Upgrader {
     this.countryCode,
     this.languageCode,
     this.minAppVersion,
+    this.completer,
     this.dialogStyle = UpgradeDialogStyle.material,
     TargetPlatform? platform,
   })  : client = client ?? http.Client(),
@@ -739,6 +743,7 @@ class Upgrader {
     }
 
     if (shouldPop) {
+      completer?.complete();
       popNavigator(context);
     }
   }
@@ -757,6 +762,7 @@ class Upgrader {
     if (doProcess) {}
 
     if (shouldPop) {
+      completer?.complete();
       popNavigator(context);
     }
   }
@@ -777,6 +783,7 @@ class Upgrader {
     }
 
     if (shouldPop) {
+      completer?.complete();
       popNavigator(context);
     }
   }
