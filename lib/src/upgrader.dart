@@ -421,6 +421,8 @@ class Upgrader {
               releaseNotes: shouldDisplayReleaseNotes() ? _releaseNotes : null,
               canDismissDialog: canDismissDialog);
         });
+      } else {
+        completer?.complete();
       }
     }
   }
