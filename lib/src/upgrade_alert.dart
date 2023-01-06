@@ -9,13 +9,7 @@ import 'package:upgrader/upgrader.dart';
 class UpgradeAlert extends UpgradeBase {
   /// The [child] contained by the widget.
   final Widget? child;
-  final Widget Function(
-    BuildContext context,
-    String? message,
-    String? releaseNotes,
-    Function(BuildContext context, bool shouldPop) onUserUpdate,
-    Function(BuildContext context, bool shouldPop) onUserLater,
-  )? alertBuilder;
+  final BuildAlertDialogCallBack? alertBuilder;
 
   /// Creates a new [UpgradeAlert].
   UpgradeAlert({Key? key, Upgrader? upgrader, this.child, this.alertBuilder})

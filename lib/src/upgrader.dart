@@ -33,6 +33,14 @@ typedef WillDisplayUpgradeCallback = void Function(
     String? installedVersion,
     String? appStoreVersion});
 
+typedef BuildAlertDialogCallBack = Widget Function(
+  BuildContext context,
+  String? message,
+  String? releaseNotes,
+  Function(BuildContext context, bool shouldPop) onUserUpdate,
+  Function(BuildContext context, bool shouldPop) onUserLater,
+);
+
 /// There are two different dialog styles: Cupertino and Material
 enum UpgradeDialogStyle { cupertino, material }
 
@@ -394,14 +402,7 @@ class Upgrader {
   /// Only called by [UpgradeAlert].
   void checkVersion({
     required BuildContext context,
-    required Widget Function(
-      BuildContext context,
-      String? message,
-      String? releaseNotes,
-      Function(BuildContext context, bool shouldPop) onUserUpdate,
-      Function(BuildContext context, bool shouldPop) onUserLater,
-    )?
-        customDialogBuilder,
+    required BuildAlertDialogCallBack? customDialogBuilder,
   }) {
     if (!_displayed) {
       final shouldDisplay = shouldDisplayUpgrade();
@@ -572,14 +573,7 @@ class Upgrader {
 
   void _showDialog(
       {required BuildContext context,
-      required Widget Function(
-        BuildContext context,
-        String? message,
-        String? releaseNotes,
-        Function(BuildContext context, bool shouldPop) onUserUpdate,
-        Function(BuildContext context, bool shouldPop) onUserLater,
-      )?
-          customDialogBuilder,
+      required BuildAlertDialogCallBack? customDialogBuilder,
       required String? title,
       required String message,
       required String? releaseNotes,
