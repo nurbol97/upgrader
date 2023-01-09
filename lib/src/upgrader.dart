@@ -156,8 +156,9 @@ class Upgrader {
   DateTime? _lastTimeAlerted;
   String? _lastVersionAlerted;
   String? _userIgnoredVersion;
-  bool _hasAlerted = false;
   bool _isCriticalUpdate = false;
+
+  bool hasAlerted = false;
 
   final notInitializedExceptionMessage =
       'initialize() not called. Must be called first.';
@@ -438,7 +439,7 @@ class Upgrader {
       print('upgrader: blocked: $isBlocked');
       print('upgrader: debugDisplayAlways: $debugDisplayAlways');
       print('upgrader: debugDisplayOnce: $debugDisplayOnce');
-      print('upgrader: hasAlerted: $_hasAlerted');
+      print('upgrader: hasAlerted: $hasAlerted');
     }
 
     // If installed version is below minimum app version, or is a critical update,
@@ -448,7 +449,7 @@ class Upgrader {
       showLater = false;
     }
     bool rv = true;
-    if (debugDisplayAlways || (debugDisplayOnce && !_hasAlerted)) {
+    if (debugDisplayAlways || (debugDisplayOnce && !hasAlerted)) {
       rv = true;
     } else if (!isUpdateAvailable()) {
       rv = false;
@@ -814,7 +815,7 @@ class Upgrader {
     _lastVersionAlerted = _appStoreVersion;
     await prefs.setString('lastVersionAlerted', _lastVersionAlerted ?? '');
 
-    _hasAlerted = true;
+    hasAlerted = true;
     return true;
   }
 
